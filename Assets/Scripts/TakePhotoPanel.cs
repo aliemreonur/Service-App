@@ -10,22 +10,33 @@ public class TakePhotoPanel : MonoBehaviour, IPanel
     public InputField photoNotes;
     public GameObject overviewPanel;
 
+    private string imgPath;
+
     private void OnEnable()
     {
         caseNumberText.text = "CASE NUMBER " + UIManager.Instance.activeCase.caseID;
     }
 
+    public void ProcessInfo()
+    {
+        byte[] imgData = null;
+        if(string.IsNullOrEmpty(imgPath) == false)
+        {
+            Texture2D img = NativeCamera.LoadImageAtPath(imgPath, 512, false);
+            imgData = img.EncodeToJPG();
+        }
+ 
+        UIManager.Instance.activeCase.photoTaken = imgData;
+        UIManager.Instance.activeCase.photoNotes = photoNotes.text;
+
+        overviewPanel.gameObject.SetActive(true);
+
+    }
+
     // Start is called before the first frame update
     public void TakePictureButton()
     {
-		TakePicture(512);
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+		TakePicture(512);      
     }
 
 	private void TakePicture(int maxSize)
@@ -36,7 +47,7 @@ public class TakePhotoPanel : MonoBehaviour, IPanel
 			if (path != null)
 			{
 				// Create a Texture2D from the captured image
-				Texture2D texture = NativeCamera.LoadImageAtPath(path, maxSize);
+				Texture2D texture = NativeCamera.LoadImageAtPath(path, maxSize, false);
 				if (texture == null)
 				{
 					Debug.Log("Couldn't load texture from " + path);
@@ -45,20 +56,12 @@ public class TakePhotoPanel : MonoBehaviour, IPanel
 
                 photoTaken.texture = texture;
                 photoTaken.gameObject.SetActive(true);
+                imgPath = path;
 			}
 		}, maxSize);
 
 		Debug.Log("Permission result: " + permission);
 	}
 
-	public void ProcessInfo()
-    {
-        UIManager.Instance.activeCase.photoTaken = photoTaken;
-        UIManager.Instance.activeCase.photoNotes = photoNotes.text;
-        
-        if(!string.IsNullOrEmpty(photoNotes.text))
-        {
-            overviewPanel.gameObject.SetActive(true);
-        }
-    }
+
 }

@@ -79,6 +79,6 @@ public class LocationPanel : MonoBehaviour, IPanel
         {
             UIManager.Instance.activeCase.locationNotes = mapNotes.text;
         }
-
+        
     }
 }
