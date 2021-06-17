@@ -6,16 +6,10 @@ using UnityEngine.UI;
 public class SelectPanel : MonoBehaviour, IPanel
 {
     public Text informationText;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    public void OnEnable()
     {
-        
+        informationText.text = UIManager.Instance.activeCase.name;
     }
 
     public void ProcessInfo()

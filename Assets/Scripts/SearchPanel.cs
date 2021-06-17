@@ -6,20 +6,13 @@ using UnityEngine.UI;
 public class SearchPanel : MonoBehaviour, IPanel
 {
     public InputField caseNumberInput;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public SelectPanel selectPanel;
 
     public void ProcessInfo()
     {
-
+        AWSManager.Instance.GetList(caseNumberInput.text, () =>
+        {
+            selectPanel.gameObject.SetActive(true);
+        });
     }
 }
